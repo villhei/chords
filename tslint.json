@@ -1,0 +1,7 @@
+{
+  "extends": ["typestrict", "tslint-config-prettier"],
+  "rules": {
+    "semicolon": [true, "never"],
+    "no-unused-variable": false
+  }
+}
