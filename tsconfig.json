@@ -7,10 +7,12 @@
     "module": "esnext",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "outDir": "build",
+    "sourceMap": true,
     "lib": ["dom", "es2017"],
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["demo/*"]
     }
   },
   "include": ["./src/**/*.ts", "./src/**/*.tsx"]
