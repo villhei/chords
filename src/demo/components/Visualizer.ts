@@ -1,17 +1,7 @@
 import m from 'mithril'
 
-const WIDTH = 800
-const HEIGHT = 600
-
 const CANVAS_BACKGROUND = 'black'
-const WAVEFORM_PEAK_COLOR = 'rgba(255, 255, 255, 1.0)'
-const WAVEFORM_BASE_COLOR = 'rgba(129, 162, 190, 1.0)'
-
-const canvasStyle = {
-  border: '1px solid black',
-  width: WIDTH,
-  height: HEIGHT
-}
+const WAVEFORM_PEAK_COLOR = 'rgba(129, 162, 190, 1.0)'
 
 function repeatTimes(count: number, cb: (iteration: number) => void) {
   for (let i = 0; i < count; ++i) {
@@ -44,9 +34,6 @@ function setupVisualizer(canvas: HTMLCanvasElement, stream: MediaStream) {
     const sliceWidth = width / bufferLength
 
     let posX = 0
-    let minValue = 0
-    let maxValue = 0
-
     canvasCtx.beginPath()
 
     repeatTimes(bufferLength, (i: number) => {
@@ -60,13 +47,8 @@ function setupVisualizer(canvas: HTMLCanvasElement, stream: MediaStream) {
       posX += sliceWidth
     })
 
-    const gradient = canvasCtx.createLinearGradient(0, 0, 0, HEIGHT)
-    gradient.addColorStop(minValue, WAVEFORM_PEAK_COLOR)
-    gradient.addColorStop(0.5, WAVEFORM_BASE_COLOR)
-    gradient.addColorStop(maxValue, WAVEFORM_PEAK_COLOR)
-
     canvasCtx.lineWidth = 2
-    canvasCtx.strokeStyle = gradient
+    canvasCtx.strokeStyle = WAVEFORM_PEAK_COLOR
 
     canvasCtx.lineTo(width, height / 2)
     canvasCtx.stroke()
@@ -76,6 +58,8 @@ function setupVisualizer(canvas: HTMLCanvasElement, stream: MediaStream) {
 
 interface Attrs {
   stream: Promise<MediaStream>
+  width: number
+  height: number
 }
 
 const Visualizer: m.Component<Attrs> = {
@@ -83,7 +67,14 @@ const Visualizer: m.Component<Attrs> = {
     setupVisualizer(vnode.dom as HTMLCanvasElement, await vnode.attrs.stream)
   },
   view(vnode) {
-    return m('canvas', { style: canvasStyle, width: WIDTH, height: HEIGHT })
+    const { width, height } = vnode.attrs
+    const canvasStyle = {
+      border: '1px solid black',
+      width,
+      height
+    }
+
+    return m('canvas', { style: canvasStyle, width, height })
   }
 }
 
