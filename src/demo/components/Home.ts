@@ -24,7 +24,7 @@ async function getMediaFileAsStream(
 }
 
 function formatName(fileUri: string) {
-  const [file, , extension] = fileUri.substring(1).split('.')
+  const [file, , extension] = fileUri.split('.')
   return [file, extension].join('.')
 }
 

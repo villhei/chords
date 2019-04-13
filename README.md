@@ -19,7 +19,7 @@ Will start a parcel-bundler instance for serving a demo app @ [localhost:1234](h
 ### Update the demo
 
 ```
-npm build
+npm run build
 ```
 
-..and commit
+..and commit the updated `/docs` -folder

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "parcel build src/demo/index.html -d docs --public-url .",
+    "build": "npm run clean && parcel build src/demo/index.html -d docs --public-url .",
+    "clean": "rm -rf docs/*",
     "start": "parcel src/demo/index.html",
     "compile": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
