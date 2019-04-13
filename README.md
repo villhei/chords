@@ -13,3 +13,11 @@ Will start a parcel-bundler instance for serving a demo app @ [http://localhost:
 
 - [/src/lib](src/lib) - The library code
 - [src/demo](src/demo) - The browser integration
+
+### Update the demo
+
+```
+npm build
+```
+
+..and commit

@@ -15,6 +15,7 @@ function setupVisualizer(canvas: HTMLCanvasElement, stream: MediaStream) {
 
   const analyzer = audioCtx.createAnalyser()
   analyzer.fftSize = 2048
+  analyzer.smoothingTimeConstant = 0
 
   const bufferLength = analyzer.frequencyBinCount
   const audioBuffer = new Uint8Array(bufferLength)

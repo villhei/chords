@@ -1,19 +1,31 @@
 import m from 'mithril'
 import Nav from '~/components/Nav'
-import Visualizer from '~/components/Visualizer'
+import FrequencyVisualizer from '~/components/FrequencyVisualizer'
 
-import sineSwepUrl from '~/sine_sweep_10hz_10khz.wav'
+import Visualizer from '~/components/Visualiser'
+
+import sineSweepUrl from '~/sine_sweep_10hz-10khz.wav'
+import sineSweepFullRangeUrl from '~/sine_sweep_20hz-22khz.wav'
 
 function getMicrophoneStream(): Promise<MediaStream> {
   return navigator.mediaDevices.getUserMedia({ audio: true })
 }
 
-async function getSineSweep(): Promise<MediaStream> {
-  const audio = new Audio(sineSwepUrl)
-  audio.muted = true
+async function getMediaFileAsStream(
+  url: string,
+  isMuted: boolean = true
+): Promise<MediaStream> {
+  const audio = new Audio(url)
+  audio.muted = isMuted
   audio.loop = true
+  audio.playbackRate = 1.0
   await audio.play()
   return audio.captureStream()
+}
+
+function formatName(fileUri: string) {
+  const [file, , extension] = fileUri.substring(1).split('.')
+  return [file, extension].join('.')
 }
 
 const canvasSize = {
@@ -23,23 +35,40 @@ const canvasSize = {
 
 const Home = (iNode: m.Vnode): m.Component => {
   const microphoneStream: Promise<MediaStream> = getMicrophoneStream()
-  const sineSweep: Promise<MediaStream> = getSineSweep()
+
+  const mediaView = [sineSweepUrl, sineSweepFullRangeUrl]
+    .map(fileName => [fileName, getMediaFileAsStream(fileName)])
+    .map(([fileName, stream]) => [
+      m('h3', 'Datasource: ' + formatName(fileName)),
+      m('checkbox', {
+        checked: false
+      }),
+      m('h4', 'Time domain'),
+      m(Visualizer, {
+        ...canvasSize,
+        stream
+      }),
+      m('h4', 'Frequency domain'),
+      m(FrequencyVisualizer, {
+        ...canvasSize,
+        stream
+      })
+    ])
+    .reduce((acc, item) => acc.concat(...item), [])
   return {
     view(vnode) {
-      return m('.page', [
-        m(Nav),
-        m('h1', "Let's interface with audio"),
-        m('h3', 'Microphone input'),
-        m(Visualizer, {
-          ...canvasSize,
-          stream: microphoneStream
-        }),
-        m('h3', 'Sine sweep'),
-        m(Visualizer, {
-          ...canvasSize,
-          stream: sineSweep
-        })
-      ])
+      return m(
+        '.page',
+        [
+          m(Nav),
+          m('h1', "Let's interface with audio"),
+          m('h3', 'Microphone input'),
+          m(Visualizer, {
+            ...canvasSize,
+            stream: microphoneStream
+          })
+        ].concat(mediaView)
+      )
     }
   }
 }
