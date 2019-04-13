@@ -1,4 +1,6 @@
-# Chord detection for JS
+# Audio stuff for JS
+
+See the [http://villhei.github.io/chords](online demo)
 
 ## Development
 
